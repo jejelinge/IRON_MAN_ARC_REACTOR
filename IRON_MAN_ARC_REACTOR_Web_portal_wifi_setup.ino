@@ -1,4 +1,3 @@
-
 #include "TM1637Display.h"
 #include "Adafruit_NeoPixel.h"
 #include "NTPClient.h"
@@ -16,12 +15,8 @@
 
 //========================USEFUL VARIABLES=============================
 int UTC = 2; // UTC = value in hour (SUMMER TIME) [For example: Paris UTC+2 => UTC=2]
-
-const char *ssid     = "YOUR SSID HERE"; 
-const char *password = "WIFI PASSWORD HERE";
-
 int Display_backlight = 2; // Adjust it 0 to 7
-int led_ring_brightness = 10; // Adjust it 0 to 255
+int led_ring_brightness = 30; // Adjust it 0 to 255
 int led_ring_brightness_flash = 250; // Adjust it 0 to 255
 
 // ========================================================================
@@ -42,6 +37,7 @@ int flag = 0;
 // Define NTP Client to get time
 WiFiUDP ntpUDP;
 NTPClient timeClient(ntpUDP, "pool.ntp.org", utcOffsetInSeconds*UTC);
+bool res;
 
 void setup() {
 
@@ -50,11 +46,18 @@ void setup() {
 
   Serial.begin(115200);
   Serial.println("\n Starting");
-  WiFi.begin(ssid, password);
 
-  while ( WiFi.status() != WL_CONNECTED ) {
-    delay ( 500 );
-    Serial.print ( "." );
+  WiFiManager manager;   
+
+  //manager.resetSettings();
+
+  manager.setTimeout(180);
+  //fetches ssid and password and tries to connect, if connections succeeds it starts an access point with the name called "IRON_MAN_ARC" and waits in a blocking loop for configuration
+  res = manager.autoConnect("IRON_MAN_ARC","password");
+  
+  if(!res) {
+  Serial.println("failed to connect and timeout occurred");
+  ESP.restart(); //reset and try again
   }
 
   timeClient.begin();
@@ -169,7 +172,7 @@ void blue_light(){
 }
 
 void flash_cuckoo(){
-    pixels.setBrightness(led_ring_brightness_flash);
+	pixels.setBrightness(led_ring_brightness_flash);
     pixels.setPixelColor(0, pixels.Color(250,250,250));
     pixels.setPixelColor(1, pixels.Color(250,250,250));
     pixels.setPixelColor(2, pixels.Color(250,250,250));
