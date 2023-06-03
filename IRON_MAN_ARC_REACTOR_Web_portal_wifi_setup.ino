@@ -16,7 +16,7 @@
 //========================USEFUL VARIABLES=============================
 int UTC = 2; // UTC = value in hour (SUMMER TIME) [For example: Paris UTC+2 => UTC=2]
 int Display_backlight = 2; // Adjust it 0 to 7
-int led_ring_brightness = 30; // Adjust it 0 to 255
+int led_ring_brightness = 10; // Adjust it 0 to 255
 int led_ring_brightness_flash = 250; // Adjust it 0 to 255
 
 // ========================================================================
